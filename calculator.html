@@ -1,0 +1,163 @@
+<form name="SDTD_reg">
+
+<table border="0" rules="none">
+	<tr align="center">
+		<td colspan="3">座標</td>
+		
+	</tr>
+	<tr>
+		<td></td>
+		<td>N:<input type="text" name="N_num" id="N" value="" style="ime-mode:disabled;" onchange="isRegNum(this);TbEna(this)"></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>W:<input type="text" name="W_num" id="W" value="" style="ime-mode:disabled;" onchange="isRegNum(this);TbEna(this)"></td>
+		<td align="center">+</td>
+		<td>E:<input type="text" name="E_num" id="E" value="" style="ime-mode:disabled;" onchange="isRegNum(this);TbEna(this)"></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>S:<input type="text" name="S_num" id="S" value="" style="ime-mode:disabled;" onchange="isRegNum(this);TbEna(this)"></td>
+		<td></td>
+	</tr>
+</table>
+<input type="button" value="計算" onclick="tbox1()">
+<input type="button" value="リセット" onclick="clr()"><br>
+<br>
+計算結果
+<strong><font color="red">r.<div id="EW" style="display:inline;">Null</div>.<div id="NS" style="display:inline;">Null</div>.7rg</font></strong><br>
+<br>
+<strong><font color="red"><div id="er"></div></font></strong>
+</form>
+
+<script language="JavaScript">
+
+//入力が数値か判定
+function isRegNum(obj){
+        var str=obj.value; /* 入力値 */
+        if(str != ""){
+        	if(str.match(/[^0-9]/g)){ /* 数値以外の文字列が含まれていた場合 */
+            	alert (str.match(/[^0-9]/g)+'\n\n数値以外が含まれています'); /* アラート表示 */
+            	obj.value=""; /* テキストボックスを空にする */
+            	return false;
+        	}
+        }
+}
+
+//テキストボックスの入力可否
+
+function TbEna(obj){
+	var str=obj;
+	//objに入力がある場合
+	if(obj.value != ""){
+		if(obj == "N"){
+			document.getElementById('S').readOnly = true;
+		}else if(obj == "S"){
+			document.getElementById('N').readOnly = true;
+		}else if(obj == "W"){
+			document.getElementById('E').readOnly = true;
+		}else if(obj == "E"){
+			document.getElementById('W').readOnly = true;
+		}else{
+		}
+	}
+}
+
+
+//入力と結果の初期化
+function clr(){
+
+	//テキストボックス初期化
+	document.SDTD_reg.N_num.value="";
+	document.SDTD_reg.W_num.value="";
+	document.SDTD_reg.E_num.value="";
+	document.SDTD_reg.S_num.value="";
+	
+	//計算結果初期化
+	document.getElementById("NS").innerHTML = "Null";
+	document.getElementById("EW").innerHTML = "Null";
+	
+	//エラー初期化
+	document.getElementById("er").innerHTML = "";
+	
+}
+
+//入力結果の計算
+function tbox1(){
+	//変数定義
+	//フォーム入力情報
+	var int_N_num = document.SDTD_reg.N_num.value;
+	var int_W_num = document.SDTD_reg.W_num.value;
+	var int_E_num = document.SDTD_reg.E_num.value;
+	var int_S_num = document.SDTD_reg.S_num.value;
+	
+	//計算結果格納先
+	var int_N_num_res = "";
+	var int_W_num_res = "";
+	var int_E_num_res = "";
+	var int_S_num_res = "";
+	
+	//フォームへの入力数
+	var int_form_input_num = "0";
+	
+	//例外処理
+	//フォームへの入力数計算	
+	if(document.SDTD_reg.N_num.value != "")
+		int_form_input_num++;
+	if(document.SDTD_reg.W_num.value != "")
+		int_form_input_num++;
+	if(document.SDTD_reg.E_num.value != "")
+		int_form_input_num++;
+	if(document.SDTD_reg.S_num.value != "")
+		int_form_input_num++;
+	
+	
+	
+		//座標入力数が2箇所以外の時にエラー
+	if(int_form_input_num < "2"){
+		document.getElementById("er").innerHTML = "座標入力数が不足";
+		
+	}else if(int_form_input_num > "2"){
+		document.getElementById("er").innerHTML = "座標入力数が過多";
+		
+	}else if(((int_N_num != "")&&(int_S_num != "")) || ((int_E_num != "")&&(int_W_num != ""))){
+		//NS,WEに同時に入力している場合
+		document.getElementById("er").innerHTML = "NS,EWに同時に入力しています";
+		
+	}else{
+			document.getElementById("er").innerHTML = "";
+			//座標計算を開始
+			//北と南の計算
+			if(int_N_num != ""){
+				//北の計算
+				int_N_num_res = Math.floor(int_N_num/512);
+				//結果の書き込み
+				document.getElementById("NS").innerHTML = int_N_num_res;
+				
+			}else{
+				//南の計算
+				int_S_num_res = Math.ceil((-int_S_num/513)-1);
+				//結果の書き込み
+				document.getElementById("NS").innerHTML = int_S_num_res;
+			}
+			
+			//東と西の計算
+			if(int_E_num != ""){
+				//東の計算
+				int_E_num_res = Math.floor(int_E_num/512);
+				//結果の書き込み
+				document.getElementById("EW").innerHTML = int_E_num_res;
+				
+			}else{
+				//西の計算
+				int_W_num_res = Math.ceil((-int_W_num/513)-1);
+				//結果の書き込み
+				document.getElementById("EW").innerHTML = int_W_num_res;
+			}		
+			
+	}
+
+}
+
+
+</script>
