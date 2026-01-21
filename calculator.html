@@ -1,163 +1,346 @@
-<form name="SDTD_reg">
-
-<table border="0" rules="none">
-	<tr align="center">
-		<td colspan="3">座標</td>
-		
-	</tr>
-	<tr>
-		<td></td>
-		<td>N:<input type="text" name="N_num" id="N" value="" style="ime-mode:disabled;" onchange="isRegNum(this);TbEna(this)"></td>
-		<td></td>
-	</tr>
-	<tr>
-		<td>W:<input type="text" name="W_num" id="W" value="" style="ime-mode:disabled;" onchange="isRegNum(this);TbEna(this)"></td>
-		<td align="center">+</td>
-		<td>E:<input type="text" name="E_num" id="E" value="" style="ime-mode:disabled;" onchange="isRegNum(this);TbEna(this)"></td>
-	</tr>
-	<tr>
-		<td></td>
-		<td>S:<input type="text" name="S_num" id="S" value="" style="ime-mode:disabled;" onchange="isRegNum(this);TbEna(this)"></td>
-		<td></td>
-	</tr>
-</table>
-<input type="button" value="計算" onclick="tbox1()">
-<input type="button" value="リセット" onclick="clr()"><br>
-<br>
-計算結果
-<strong><font color="red">r.<div id="EW" style="display:inline;">Null</div>.<div id="NS" style="display:inline;">Null</div>.7rg</font></strong><br>
-<br>
-<strong><font color="red"><div id="er"></div></font></strong>
-</form>
-
-<script language="JavaScript">
-
-//入力が数値か判定
-function isRegNum(obj){
-        var str=obj.value; /* 入力値 */
-        if(str != ""){
-        	if(str.match(/[^0-9]/g)){ /* 数値以外の文字列が含まれていた場合 */
-            	alert (str.match(/[^0-9]/g)+'\n\n数値以外が含まれています'); /* アラート表示 */
-            	obj.value=""; /* テキストボックスを空にする */
-            	return false;
-        	}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>座標計算ツール</title>
+    <style>
+        :root {
+            --primary-color: #007acc;
+            --error-color: #d32f2f;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --panel-bg: #ffffff;
+            --border-color: #ddd;
+            --disabled-bg: #f0f0f0;
         }
-}
 
-//テキストボックスの入力可否
+        body {
+            font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-function TbEna(obj){
-	var str=obj;
-	//objに入力がある場合
-	if(obj.value != ""){
-		if(obj == "N"){
-			document.getElementById('S').readOnly = true;
-		}else if(obj == "S"){
-			document.getElementById('N').readOnly = true;
-		}else if(obj == "W"){
-			document.getElementById('E').readOnly = true;
-		}else if(obj == "E"){
-			document.getElementById('W').readOnly = true;
-		}else{
-		}
-	}
-}
+        .container {
+            background: var(--panel-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+        }
 
+        h1 {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
 
-//入力と結果の初期化
-function clr(){
+        /* 十字キーのようなレイアウトを作成 */
+        .coordinates-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 15px;
+            align-items: center;
+            justify-items: center;
+            margin-bottom: 2rem;
+        }
 
-	//テキストボックス初期化
-	document.SDTD_reg.N_num.value="";
-	document.SDTD_reg.W_num.value="";
-	document.SDTD_reg.E_num.value="";
-	document.SDTD_reg.S_num.value="";
-	
-	//計算結果初期化
-	document.getElementById("NS").innerHTML = "Null";
-	document.getElementById("EW").innerHTML = "Null";
-	
-	//エラー初期化
-	document.getElementById("er").innerHTML = "";
-	
-}
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
 
-//入力結果の計算
-function tbox1(){
-	//変数定義
-	//フォーム入力情報
-	var int_N_num = document.SDTD_reg.N_num.value;
-	var int_W_num = document.SDTD_reg.W_num.value;
-	var int_E_num = document.SDTD_reg.E_num.value;
-	var int_S_num = document.SDTD_reg.S_num.value;
-	
-	//計算結果格納先
-	var int_N_num_res = "";
-	var int_W_num_res = "";
-	var int_E_num_res = "";
-	var int_S_num_res = "";
-	
-	//フォームへの入力数
-	var int_form_input_num = "0";
-	
-	//例外処理
-	//フォームへの入力数計算	
-	if(document.SDTD_reg.N_num.value != "")
-		int_form_input_num++;
-	if(document.SDTD_reg.W_num.value != "")
-		int_form_input_num++;
-	if(document.SDTD_reg.E_num.value != "")
-		int_form_input_num++;
-	if(document.SDTD_reg.S_num.value != "")
-		int_form_input_num++;
-	
-	
-	
-		//座標入力数が2箇所以外の時にエラー
-	if(int_form_input_num < "2"){
-		document.getElementById("er").innerHTML = "座標入力数が不足";
-		
-	}else if(int_form_input_num > "2"){
-		document.getElementById("er").innerHTML = "座標入力数が過多";
-		
-	}else if(((int_N_num != "")&&(int_S_num != "")) || ((int_E_num != "")&&(int_W_num != ""))){
-		//NS,WEに同時に入力している場合
-		document.getElementById("er").innerHTML = "NS,EWに同時に入力しています";
-		
-	}else{
-			document.getElementById("er").innerHTML = "";
-			//座標計算を開始
-			//北と南の計算
-			if(int_N_num != ""){
-				//北の計算
-				int_N_num_res = Math.floor(int_N_num/512);
-				//結果の書き込み
-				document.getElementById("NS").innerHTML = int_N_num_res;
-				
-			}else{
-				//南の計算
-				int_S_num_res = Math.ceil((-int_S_num/513)-1);
-				//結果の書き込み
-				document.getElementById("NS").innerHTML = int_S_num_res;
-			}
-			
-			//東と西の計算
-			if(int_E_num != ""){
-				//東の計算
-				int_E_num_res = Math.floor(int_E_num/512);
-				//結果の書き込み
-				document.getElementById("EW").innerHTML = int_E_num_res;
-				
-			}else{
-				//西の計算
-				int_W_num_res = Math.ceil((-int_W_num/513)-1);
-				//結果の書き込み
-				document.getElementById("EW").innerHTML = int_W_num_res;
-			}		
-			
-	}
+        .input-group label {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
 
-}
+        /* グリッド配置 */
+        .pos-n { grid-column: 2; grid-row: 1; }
+        .pos-w { grid-column: 1; grid-row: 2; }
+        .pos-center { 
+            grid-column: 2; 
+            grid-row: 2; 
+            font-size: 1.5rem; 
+            color: #aaa; 
+            user-select: none;
+        }
+        .pos-e { grid-column: 3; grid-row: 2; }
+        .pos-s { grid-column: 2; grid-row: 3; }
 
+        input[type="text"] {
+            width: 80%;
+            padding: 8px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
 
-</script>
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        input[type="text"]:disabled {
+            background-color: var(--disabled-bg);
+            cursor: not-allowed;
+            color: #999;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn-calc {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-calc:hover { background-color: #0062a3; }
+
+        .btn-reset {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        .btn-reset:hover { background-color: #d0d0d0; }
+
+        .result-panel {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-value {
+            font-family: monospace;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--error-color); /* 元のデザインを踏襲して赤 */
+            background: #fff0f0;
+            padding: 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+            min-height: 1.4em;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-weight: bold;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            min-height: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <h1>座標計算</h1>
+        <form id="calcForm" novalidate>
+            <div class="coordinates-grid">
+                <div class="input-group pos-n">
+                    <label for="N">N (北)</label>
+                    <input type="text" id="N" name="N" placeholder="0" inputmode="numeric">
+                </div>
+                
+                <div class="input-group pos-w">
+                    <label for="W">W (西)</label>
+                    <input type="text" id="W" name="W" placeholder="0" inputmode="numeric">
+                </div>
+                
+                <div class="pos-center">+</div>
+                
+                <div class="input-group pos-e">
+                    <label for="E">E (東)</label>
+                    <input type="text" id="E" name="E" placeholder="0" inputmode="numeric">
+                </div>
+                
+                <div class="input-group pos-s">
+                    <label for="S">S (南)</label>
+                    <input type="text" id="S" name="S" placeholder="0" inputmode="numeric">
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="button" id="btnCalc" class="btn-calc">計算</button>
+                <button type="button" id="btnReset" class="btn-reset">リセット</button>
+            </div>
+        </form>
+
+        <div class="result-panel">
+            <div class="result-label">計算結果</div>
+            <div id="resultDisplay" class="result-value">r.Null.Null.7rg</div>
+            <div id="errorDisplay" class="error-message"></div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 定数定義
+            const DIVISOR_POSITIVE = 512;
+            const DIVISOR_NEGATIVE = 513;
+
+            // DOM要素の取得
+            const inputs = {
+                N: document.getElementById('N'),
+                W: document.getElementById('W'),
+                E: document.getElementById('E'),
+                S: document.getElementById('S')
+            };
+            const btnCalc = document.getElementById('btnCalc');
+            const btnReset = document.getElementById('btnReset');
+            const resultDisplay = document.getElementById('resultDisplay');
+            const errorDisplay = document.getElementById('errorDisplay');
+
+            // 入力監視と排他制御
+            Object.values(inputs).forEach(input => {
+                input.addEventListener('input', (e) => {
+                    validateInput(e.target);
+                    updateInputState();
+                });
+            });
+
+            // "計算"ボタン
+            btnCalc.addEventListener('click', calculateResult);
+
+            // "リセット"ボタン
+            btnReset.addEventListener('click', resetForm);
+
+            /**
+             * 数字以外の入力を防ぐ
+             */
+            function validateInput(target) {
+                const value = target.value;
+                // 数字以外が含まれていたら除去して警告
+                if (/[^0-9]/.test(value)) {
+                    alert('数値のみ入力可能です');
+                    target.value = value.replace(/[^0-9]/g, '');
+                }
+            }
+
+            /**
+             * 入力状況に応じて対になるフィールドを無効化する
+             */
+            function updateInputState() {
+                const hasN = inputs.N.value !== '';
+                const hasS = inputs.S.value !== '';
+                const hasE = inputs.E.value !== '';
+                const hasW = inputs.W.value !== '';
+
+                inputs.S.disabled = hasN;
+                inputs.N.disabled = hasS;
+                inputs.W.disabled = hasE;
+                inputs.E.disabled = hasW;
+            }
+
+            /**
+             * メインの計算処理
+             */
+            function calculateResult() {
+                // 値の取得（空文字ならnull扱い）
+                const valN = inputs.N.value;
+                const valS = inputs.S.value;
+                const valE = inputs.E.value;
+                const valW = inputs.W.value;
+
+                // 入力箇所の数をカウント
+                const inputCount = [valN, valS, valE, valW].filter(v => v !== '').length;
+
+                // バリデーション
+                if (inputCount < 2) {
+                    showError("座標入力数が不足しています");
+                    return;
+                }
+                if (inputCount > 2) {
+                    showError("座標入力数が過多です");
+                    return;
+                }
+
+                // ペアチェック: (N or S) AND (E or W) であるか
+                const hasNS = valN !== '' || valS !== '';
+                const hasEW = valE !== '' || valW !== '';
+
+                if (!hasNS || !hasEW) {
+                    showError("NS(南北) と EW(東西) から1つずつ入力してください");
+                    return;
+                }
+
+                // エラーなし
+                showError("");
+
+                // 計算実行
+                let resNS = "Null";
+                let resEW = "Null";
+
+                // 南北の計算
+                if (valN !== "") {
+                    // 北(N): 正の方向
+                    resNS = Math.floor(parseInt(valN, 10) / DIVISOR_POSITIVE);
+                } else {
+                    // 南(S): 負の方向として計算
+                    // 元のロジック: Math.ceil((-int_S_num / 513) - 1)
+                    resNS = Math.ceil((-parseInt(valS, 10) / DIVISOR_NEGATIVE) - 1);
+                }
+
+                // 東西の計算
+                if (valE !== "") {
+                    // 東(E): 正の方向
+                    resEW = Math.floor(parseInt(valE, 10) / DIVISOR_POSITIVE);
+                } else {
+                    // 西(W): 負の方向として計算
+                    resEW = Math.ceil((-parseInt(valW, 10) / DIVISOR_NEGATIVE) - 1);
+                }
+
+                // 結果表示 (r.東西.南北.7rg)
+                resultDisplay.textContent = `r.${resEW}.${resNS}.7rg`;
+            }
+
+            /**
+             * フォームのリセット
+             */
+            function resetForm() {
+                Object.values(inputs).forEach(input => {
+                    input.value = '';
+                    input.disabled = false;
+                });
+                resultDisplay.textContent = 'r.Null.Null.7rg';
+                showError("");
+            }
+
+            function showError(msg) {
+                errorDisplay.textContent = msg;
+            }
+        });
+    </script>
+</body>
+</html>
